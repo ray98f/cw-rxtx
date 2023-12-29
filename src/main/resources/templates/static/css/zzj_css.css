@@ -1,0 +1,235 @@
+@charset "utf-8";
+/* CSS Document */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.pad10 {
+    padding: 0 10px;
+}
+
+.zzj_login_wrap {
+    width: 1920px;
+    height: 1080px;
+    background: url(../images/bg.jpg) center center no-repeat;
+}
+
+.space {
+    height: 200px;
+    clear: both;
+}
+
+.zzj_login_logo {
+    width: 810px;
+    height: 93px;
+    line-height: 93px;
+    font-family: "微软雅黑";
+    font-weight: bolder;
+    font-size: 56px;
+    color: #fff;
+    padding: 0 0 0 65px;
+    background: url(../images/logo.png) left center no-repeat;
+    margin: 0 auto;
+    position: relative;
+}
+
+.zzj_login_login_box {
+    width: 950px;
+    height: 550px;
+    background: url(../images/login_box.png) no-repeat;
+    position: relative;
+    margin: 20px auto;
+}
+
+.zzj_login_user, .zzj_login_password, .zzj_login_enter {
+    position: absolute;
+    width: 376px;
+    height: 50px;
+    line-height: 40px;
+    background: none;
+    border: none;
+    outline: none;
+    left: 340px;
+    font-family: "微软雅黑";
+    font-size: 16px;
+    color: #fff;
+}
+
+.zzj_login_user {
+    top: 180px;
+}
+
+.zzj_login_password {
+    top: 280px;
+}
+
+.zzj_login_enter {
+    top: 385px;
+    cursor: pointer
+}
+
+.login_a {
+    position: absolute;
+    left: 40px;
+    top: 500px;
+    font-family: "微软雅黑";
+    font-size: 14px;
+}
+
+.zzj_subpage_wrap {
+    width: 1920px;
+    height: 1080px;
+    background: url(../images/subpage_bg.jpg) center center no-repeat;
+}
+.tab_img {
+    background: url(../images/subpage_bg.jpg) center center no-repeat;
+}
+
+.zzj_loading {
+    width: 1920px;
+    height: 1080px;
+    background: url(../images/jiazai.gif) center center no-repeat;
+}
+
+.top {
+    height: 84px;
+    background: url(../images/top.png) no-repeat;
+}
+
+.top_left {
+    height: 80px;
+    line-height: 80px;
+    font-family: "微软雅黑";
+    font-weight: bolder;
+    font-size: 28px;
+    color: #fff;
+    padding: 0 0 0 90px;
+    background: url(../images/logo.png) 20px center no-repeat;
+}
+
+.subpage_main {
+    background: url(../images/sunpage_main.png) no-repeat;
+    position: relative;
+    width: 1920px;
+    height: 999px;
+}
+
+.subpage_main_in {
+    width: 1900px;
+    height: 976px;
+    overflow: auto;
+    position: absolute;
+    left: 13px;
+    top: 10px;
+    font-size: 30px;
+}
+
+.text1 p {
+    font-size: 60px;
+    font-family: "微软雅黑";
+    line-height: 3em;
+    text-align: center;
+}
+.msg p{
+    font-size: 35px;
+    font-family: "微软雅黑";
+    line-height: 3em;
+    text-align: center;
+}
+
+.btn_box {
+    text-align: center;
+    margin: 20px 0 0 0;
+}
+
+.btn {
+    width: 223px;
+    height: 74px;
+    line-height: 72px;
+    color: #fff;
+    font-size: 30px;
+    text-align: center;
+    border: none;
+    outline: none;
+    background: url(../images/btn_bg.png) no-repeat;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+.btn:hover {
+    font-weight: bold;
+}
+
+.table_box {
+    padding: 20px;
+}
+
+.table_box table {
+    border-collapse: collapse;
+    border: 1px solid #AAAAAA;
+}
+
+.table_box table tr td {
+    padding: 10px;
+    font-family: "微软雅黑";
+    font-size: 42px;
+    border: 1px solid #AAAAAA;
+}
+
+.pic {
+    width: 120px;
+    height: 148px;
+}
+
+.zzj_login_login_box2 {
+    width: 950px;
+    height: 550px;
+    background: url(../images/login_box2.png) no-repeat;
+    position: relative;
+    margin: 20px auto;
+}
+.zzj_login_login_close {
+    width: 20px;
+    height: 20px;
+    background: url(../images/close.png) no-repeat;
+    position: absolute;
+    top:30px;
+    right:20px;
+    /*z-index: 999;*/
+}
+
+.zzj_login_zhiwen {
+    position: absolute;
+    width: 225px;
+    height: 213px;
+    background: none;
+    border: none;
+    outline: none;
+    left:183px;
+    top:175px;
+    cursor: pointer;
+}
+
+.zzj_login_mima {
+    position: absolute;
+    width: 225px;
+    height: 213px;
+    background: none;
+    border: none;
+    outline: none;
+    left:510px;
+    top:175px;
+    cursor: pointer;
+}
+.c-both{clear:both;}
+.bottom_btn_box{
+    position: absolute;
+    width: 1920px;
+    bottom: 200px;
+}

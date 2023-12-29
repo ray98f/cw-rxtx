@@ -1,0 +1,329 @@
+@CHARSET "UTF-8";
+body {
+    font-size: 18px;
+}
+
+input {
+    background: none;
+    border: 1px solid #FFFFFF;
+    font-size: 26px;
+    color: #FFFFFF;
+}
+
+#div_main {
+    width: 1920px;
+    height: 1080px;
+    background: #5A6A7F;
+    border: 2px solid #FFFFFF;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    filter: alpha(opacity=80);
+    background-image: url("../images/examination/background.png");
+    background-size: 100% 100%;
+}
+
+#div_top {
+    position: relative;
+    float: top;
+    height: 8%;
+    cursor: default;
+}
+
+#div_center {
+    position: relative;
+    width: 100%;
+    height: 50%;
+    cursor: default;
+}
+
+#div_right {
+    position: relative;
+    float: right;
+    width: 50%;
+    height: 50%;
+    cursor: default;
+}
+
+#div_left {
+    position: relative;
+    float: left;
+    width: 50%;
+    height: 50%;
+    cursor: default;
+}
+
+#div_bottom {
+    position: relative;
+    height: 30%;
+    cursor: default;
+}
+
+/*-----------------------------------------------*/
+
+#div_top_forExam {
+    position: relative;
+    float: top;
+    width: 300px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding-bottom: 60px;
+    /* height:15%; */
+    cursor: default;
+}
+
+#div_left_forExam {
+    position: relative;
+    width: 20%;
+    height: 60%;
+    float: left;
+    text-align: left;
+    cursor: default;
+}
+
+#div_right_forExam {
+    position: relative;
+    width: 80%;
+    height: 60%;
+    float: right;
+    cursor: default;
+}
+
+#div_center_forExam {
+    position: relative;
+    width: 100%;
+    height: 80%;
+    cursor: default;
+}
+
+#div_bottom_forExam {
+    width: 100%;
+    position: relative;
+    /* height:15%; */
+    float: right;
+    cursor: default;
+}
+
+#div_bottom_forExam1 {
+    position: relative;
+    height: 10%;
+    cursor: default;
+}
+
+#div_title_img {
+    position: relative;
+    float: left;
+}
+
+#div_title_forExam {
+    position: relative;
+    float: right;
+    margin-top: 22px;
+    font-family: 微软雅黑;
+    font-weight: bold;
+    font-size: 32px;
+    color: #424953;
+}
+
+#table_btn {
+    width: 480px;
+    margin-left: 950px;
+}
+
+#div_left_forExam tr td {
+    padding: 3px;
+    font-size: 26px;
+    letter-spacing: 15px;
+    cursor: pointer;
+    border: 1px solid #FFFFFF;
+    color: #FFFFFF;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    font-family: 微软雅黑;
+    text-align: center;
+    width: 150px;
+    margin: 0px;
+    background: #808080;
+}
+
+#div_question {
+    width: 520px;
+    padding-bottom: 20px;
+    font-family: 微软雅黑;
+    color: #393a3a;
+}
+
+#div_showAnswer {
+    width: 520px;
+    color: #FFFFFF;
+}
+
+#span_content {
+    font-size: 26px;
+}
+
+#table_answer {
+    width: 580px;
+    margin-top: 40px;
+    text-align: left;
+    font-family: 微软雅黑;
+}
+
+#table_answer tr td {
+    border: 1px solid #c0c0c0;
+    padding-left: 40px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.input_hidden {
+    display: none;
+}
+
+/*#btn_submit, #btn_threecheck, #btn_quit {*/
+/*background-color: #3B477F;*/
+/*}*/
+
+#btn_prev {
+    margin-right: 55px;
+}
+
+#btn_next {
+    margin-left: 55px;
+}
+
+#div_bottom_forExam input {
+    width: 160px;
+    border: 1px solid #FFFFFF;
+    font-size: 26px;
+    color: #FFFFFF;
+}
+
+#div_btnlist input {
+    width: 80px;
+    background: none;
+    border: 1px solid #FFFFFF;
+    font-size: 26px;
+    color: #FFFFFF;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#admin_table {
+    color: #FFFFFF;
+    width: 850px;
+    text-align: left;
+}
+
+#admin_table tr th {
+    font-style: italic;
+    font-size: 18px;
+}
+
+#admin_table tr td {
+    font-size: 16px;
+    border: 1px solid #FFFFFF;
+    background: #4A5C61;
+    height: 36px;
+    padding: 3px;
+}
+
+/*-----------------------------------------------*/
+#div_company {
+    font-size: 12px;
+    margin-top: 25px;
+    font-weight: normal;
+    font-family: 宋体;
+}
+
+#div_title {
+    margin-top: 55px;
+    font-size: 40px;
+}
+
+/*--------------------------------------------------*/
+
+#div_prev {
+    position: absolute;
+    left: 50px;
+    top: 250px;
+    width: 8%;
+    height: 20%;
+    cursor: default;
+}
+
+#div_next {
+    position: absolute;
+    right: 50px;
+    top: 250px;
+    width: 8%;
+    height: 20%;
+    cursor: default;
+}
+
+#div_middle {
+    margin: 0px;
+    width: 80%;
+
+}
+
+.title_img {
+    background-image: url("../images/examination/title_img.png");
+    display: block;
+    left: 20px;
+    background-size: 100% 100%;
+    width: 80px;
+    height: 60px;
+}
+
+#div_service_options {
+    margin-top: 35px;
+}
+
+#div_top_forResult {
+    position: relative;
+    float: top;
+    width: 600px;
+    height: 100px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+#div_center_forResult {
+    margin-bottom: 50px;
+    height: 720px;
+}
+
+#div_title_forResult {
+    position: relative;
+    float: right;
+    margin-top: 22px;
+    font-family: 微软雅黑;
+    font-weight: bold;
+    font-size: 28px;
+    color: #424953;
+}
+
+/* ------------------题目导航按钮 ------------------*/
+.check-button-prev {
+    background-image: url("../images/examination/ar_l.png");
+    display: block;
+    left: 20px;
+    background-size: 100% 100%;
+    width: 60px;
+    height: 100px;
+}
+
+.check-button-next {
+    background-image: url("../images/examination/ar_r.png");
+    display: block;
+    right: 20px;
+    background-size: 100% 100%;
+    width: 60px;
+    height: 100px;
+}
+
+.defaultImg {
+    width: 1920px;
+}

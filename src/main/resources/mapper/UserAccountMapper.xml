@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rxtx.mapper.UserAccountMapper">
+
+    <select id="getUserByName" resultType="com.rxtx.dto.res.SystemUserResDTO">
+        select
+            "user_id",
+            "user_name",
+            "user_view_name",
+            "user_password"
+        from "System_User" where "user_name" = #{userName}
+    </select>
+
+    <select id="getUserDetail" resultType="com.rxtx.dto.res.UserAccountDetailResDTO">
+        select
+        t1."user_id",
+        t1."user_name",
+        t1."user_view_name",
+        t1."user_party" as user_role,
+        t2.name as role_name,
+        t4.id AS team_id,
+        t4.teamname AS team_name
+        from "System_User" t1
+        left join S_ROLE t2 on t1."user_party" = t2.ID
+        LEFT JOIN S_USER_EXTEND t3 ON t3.USERID = t1."user_id"
+        LEFT JOIN DRIVERTEAM t4 ON t4.ID = t3.DRIVERTEAM
+        where t1."user_id" = #{userId}
+    </select>
+
+    <select id="getPassRecordCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM "record" r
+        WHERE trunc(RE_DATE)=trunc(sysdate) AND RE_PERCENT= 1 AND RE_USER_ID = #{userId}
+    </select>
+
+    <select id="getExamList" resultType="com.rxtx.dto.res.ExamResDTO">
+        select
+            "exam_id","exam_text","option_a" ,"option_b" ,"option_c","option_d","option_e","option_f","answer_correct"
+        from  exam sample(10)
+        where rownum &lt; 6
+    </select>
+
+
+    <select id="getDutyInfo" resultType="com.rxtx.dto.res.DutyDetailResDTO">
+        SELECT
+            t2.id,
+            t2.crId,
+            t2.crName,
+            t2.recDate,
+            t2.attentime,
+            t2.offtime,
+            t2.stringruntrain,
+            t2.tableinfo_id,
+            t2.miles,
+            t2.whours,
+            t3.tablename AS table_name,
+            t4.id AS line_id,
+            t4.linename AS line_name
+        FROM "CW_CR_USER_DETAIL" t1
+        LEFT JOIN "CW_CR_DETAIL" t2 ON t1.CrDetailID = t2.id
+        LEFT JOIN "TABLEINFO" t3 ON t2.TABLEINFO_ID =t3.ID
+        LEFT JOIN "LINE" t4 ON t3.LINEID  = t4.ID
+        WHERE trunc(t1.RecDate)=trunc(sysdate) AND t1.UserId = #{userId}
+    </select>
+
+    <select id="getNextDutyInfo" resultType="com.rxtx.dto.res.DutyDetailResDTO">
+        SELECT
+            t2.id,
+            t2.crId,
+            t2.crName,
+            t2.recDate,
+            t2.attentime,
+            t2.offtime,
+            t2.reptrain,
+            t2.attenplace,
+            t2.stringruntrain,
+            t2.tableinfo_id
+        FROM "CW_CR_USER_DETAIL" t1
+        LEFT JOIN "CW_CR_DETAIL" t2 ON t1.CrDetailID = t2.id
+        WHERE t1.RecDate > to_date(#{recDate},'yyyy-mm-dd hh24:mi:ss') AND t1.UserId = #{userId} AND t1.CrDetailID is not NULL  ORDER BY  t1.RECDATE  ASC
+        FETCH FIRST 1 ROWS ONLY
+    </select>
+
+    <select id="getAttendQuit" resultType="com.rxtx.dto.res.AttendQuitResDTO">
+        SELECT
+            ID,
+            ATTENDANCETIME AS attendTime,
+            BACKGROUNDTIME AS quitTime,
+            RECDATE
+        FROM "CW_BACKGROUND_RECORD"
+        WHERE CRUSERDELID = #{crId}
+    </select>
+
+    <select id="getTrainSchedules" resultType="com.rxtx.dto.res.TrainScheduleDTO">
+        SELECT
+            t.ID,
+            t.TRAINID as TRAIN_ID,
+            s.STATION_NAME,
+            to_char( to_date(t.ARRIVE ,'sssss'),'hh24:mi:ss') AS arrive,
+            to_char( to_date(t.DEPART ,'sssss'),'hh24:mi:ss') AS depart,
+            1 AS  station_type
+        FROM TRAINSCHEDULES t LEFT JOIN STATIONS s ON t.STATION = s.ID
+        WHERE t.STATION  = t."Start"
+        AND TRAINID IN
+        <foreach collection="trainIds" item="trainId" index="index" open="(" separator="," close=")">
+            #{trainId}
+        </foreach>
+        AND SCHEDULENAME IN (SELECT TableName FROM TABLEINFO t2 WHERE t2.ID = #{tableId})
+        UNION
+        SELECT
+            t.ID,
+            t.TRAINID as TRAIN_ID,
+            s.STATION_NAME,
+            to_char( to_date(t.ARRIVE ,'sssss'),'hh24:mi:ss') AS arrive,
+            to_char( to_date(t.DEPART ,'sssss'),'hh24:mi:ss') AS depart,
+            2 AS  station_type
+        FROM TRAINSCHEDULES t LEFT JOIN STATIONS s ON t.STATION = s.ID
+        WHERE t.STATION  = t.DESTINY
+        AND TRAINID IN
+        <foreach collection="trainIds" item="trainId" index="index" open="(" separator="," close=")">
+            #{trainId}
+        </foreach>
+        AND SCHEDULENAME IN (SELECT TableName FROM TABLEINFO t2 WHERE t2.ID = #{tableId})
+
+    </select>
+
+    <update id="dutyOff">
+        update CW_BACKGROUND_RECORD set
+        BACKGROUNDTIME = to_date(#{quitTime},'yyyy-mm-dd hh24:mi:ss'),
+        BACKGROUNDUSER = #{backgrounduser}
+        where USER_ID = #{userId} and CRUSERDELID = #{cruserdelid}
+    </update>
+
+    <insert id="dutyOn" parameterType="com.rxtx.dto.req.AttendQuitReqDTO">
+        insert into CW_BACKGROUND_RECORD
+        (
+            ID,
+            USER_ID,
+            CRUSERDELID,
+            ATTENDANCETIME,
+            RECDATE,
+            ATTENTUSER,
+            ALCOHOLTEST,
+            BLOODPRESSURE
+        )
+        values
+        (sys_guid(),
+         #{userId},
+        #{cruserdelid},
+        to_date(#{attendTime},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{recDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{attentuser},
+        #{alcoholtest},
+        0)
+    </insert>
+
+    <insert id="addRecord" parameterType="com.rxtx.dto.req.ExamRecordReqDTO" >
+        <selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="reId">
+            select RECORD_SEQ.nextval from dual
+        </selectKey>
+        insert into "record"
+        ( re_id,re_user_id,re_type,re_date,re_percent,re_count,re_count_error)
+        values ( #{reId},#{userId},1,sysdate,#{rePercent},#{reCount},#{reCountError})
+    </insert>
+
+    <insert id="addRecordDetail">
+        insert ALL
+        <foreach collection="list" item="item" separator=" ">
+             into "recordExamList" (rel_id, rel_exam_id,rel_answer,rel_correct,rel_re_id) values
+            (RECORD_EXAM_SEQ.nextval, #{item.relExamId}, #{item.relAnswer},#{item.relCorrect},#{reId})
+        </foreach>
+        SELECT * FROM dual
+    </insert>
+
+
+    <insert id="saveOrderInfo" parameterType="com.rxtx.dto.req.OrderReqDTO" >
+        insert into "NBCS_DRIVER_INFO"
+        ( id,"date",table_id,driver_id,line_id,
+        <if test="driverteam !=null and driverteam!=''">
+            driverteam,
+        </if>
+        attend_time,off_time,kilometer,whour,detail_id,inserttime)
+        values
+        ( #{id},
+          to_date(#{date},'yyyy-mm-dd hh24:mi:ss'),
+          #{tableId},
+          #{driverId},
+          #{lineId},
+        <if test="driverteam !=null and driverteam!=''">
+            #{driverteam},
+        </if>
+          #{attendTime},
+          #{offTime},
+          #{kilometer},
+          #{whour},
+          #{detailId},
+          sysdate)
+    </insert>
+
+    <insert id="addOrderDetail">
+        insert ALL
+        <foreach collection="list" item="item" separator=" ">
+            into "USERTRAININFO"
+            (id,
+            driverinfo_id,
+            <if test="item.kilometer !=null and item.kilometer!=''">
+                kilometer,
+            </if>
+
+            trainnum,
+            startstation,
+            starttime,
+            endstation,
+            endtime,
+            <if test="item.teamId !=null and item.teamId!=''">
+                teamid,
+            </if>
+            inserttime)
+            values
+            (sys_guid(),
+             #{orderId},
+            <if test="item.kilometer !=null and item.kilometer!=''">
+                #{item.kilometer},
+            </if>
+
+             #{item.trainNum},
+             #{item.startStation},
+             #{item.startTime},
+             #{item.endStation},
+             #{item.endTime},
+            <if test="item.teamId !=null and item.teamId!=''">
+                #{item.teamId},
+            </if>
+             sysdate)
+        </foreach>
+        SELECT * FROM dual
+    </insert>
+</mapper>

@@ -1,0 +1,91 @@
+spring:
+  mvc:
+    view:
+      prefix: /
+      suffix: .html
+  resources:
+    static-locations: classpath:/templates/,classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,classpath:/templates/,file:C://uploadFile/
+  jackson:
+    time-zone: Asia/Shanghai
+    serialization:
+      write-dates-as-timestamps: true
+  servlet:
+    session:
+      tracking-modes: cookie
+      cookie:
+        http-only: true
+  #静态文件资源
+  static:
+    template-page-path: classpath:/templates/
+    resources:
+      #访问静态资源规则，可配置多个以','或'，'隔离
+      - pathPatterns: /**
+        #静态资源文件位置，可配置多个以','或'，'隔离
+        resourceLocations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,classpath:/templates/
+
+#  datasource:
+#    driver-class-name: oracle.jdbc.OracleDriver
+#    url: jdbc:oracle:thin:@192.168.30.104:1521/ORCLcdb
+#    username: C##CSM
+#    password: 123456
+#    hikari:
+#      read-only: false
+#      connection-timeout: 60000
+#      idle-timeout: 50000
+#      validation-timeout: 3000
+#      max-lifetime: 60000
+#      login-timeout: 5
+#      maximum-pool-size: 30
+#      minimum-idle: 10
+
+  #redis
+#  redis:
+#    database: 11
+#    cluster:
+#      nodes: 10.11.70.202:2051, 10.11.70.202:2052, 10.11.70.202:2053, 10.11.70.203:2051, 10.11.70.203:2052, 10.11.70.203:2053
+#    jedis:
+#      pool:
+#        max-active: 50
+#        min-idle: 0
+#        max-idle: 50
+#        max-wait: -1
+#    key-prefix: dev-
+#    key-prefix: test-
+
+#mybatis-plus:
+#  mapper-locations: classpath:/mapper/*.xml
+#  type-aliases-package: com.zzj.sms.entity
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    multiple-result-sets-enabled: true
+##    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+#    map-underscore-to-camel-case: true
+#  global-config:
+#    sql-parser-cache: true
+#    db-config:
+#      logic-delete-field: is_deleted
+#      logic-delete-value: 1
+#      logic-not-delete-value: 0
+sign:
+  verify: true
+
+async:
+  push:
+   pool-size:
+     core: 100
+     max: 100
+logging:
+  file:
+    path: ./log
+
+excluded:
+  pages: /zzj/index,/zzj/login,/zzj/logout,/zzj/index.html,/zzj/favicon.ico,/zzj/login.html,/zzj/duty.html,/zzj/duty_result.html,/zzj/three.html,/zzj/off_duty.html,/zzj/off_result.html,/zzj/off_order.html,/zzj/order_result.html,/zzj/user/examList
+
+opencv:
+  auth-path: C:/
+  image-path: C:/opencvDemo/
+  db-path: C:/facedb
+
+user:
+  feature: "http://localhost:9501/zzj/user/featureList?tenantId=RXTX"
+

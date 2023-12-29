@@ -1,0 +1,40 @@
+server:
+  port: 8088
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    context-path: /rxtx
+spring:
+  profiles:
+    active: prod
+  messages:
+    basename: i18n/messages
+  application:
+    name: rxtx
+  servlet:
+    multipart:
+      max-request-size: 25MB
+      max-file-size: 25MB
+      enabled: true
+  jpa:
+    database: oracle
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      open-in-view: false
+      properties:
+        hibernate:
+          format_sql: true
+
+jetcache:
+  statIntervalMinutes: 15
+  areaInCacheName: false
+  local:
+    default:
+      type: linkedhashmap
+      keyConvertor: fastjson
+      limit: 100
+#  jackson:
+#    time-zone: GMT+8
+#    date-format: yyyy-MM-dd HH:mm:ss
+
