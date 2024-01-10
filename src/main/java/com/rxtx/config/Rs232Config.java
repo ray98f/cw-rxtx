@@ -41,7 +41,7 @@ public class Rs232Config {
     /**
      * 缓存端口实例
      */
-    private Map<String, SerialPort> serialPortMap = new ConcurrentHashMap<>(16);
+    public Map<String, SerialPort> serialPortMap = new ConcurrentHashMap<>(16);
 
     /**
      * 监听端口

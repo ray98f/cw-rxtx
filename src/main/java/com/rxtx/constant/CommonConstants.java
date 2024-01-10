@@ -116,7 +116,8 @@ public interface CommonConstants {
     String WINE_CODE_3 = "7E013000010031"; //请求吹气,等待测试
     String WINE_CODE_4 = "7E014000010041"; //停止酒测
 
-
+    String WS_CLOSE_MSG ="websocket已关闭";
+    String CARD_COM_FAIL ="COM5端口打开失败";
     String HEX_STRING = "0123456789ABCDEF";
     String NONE = "无";
     String ODD = "奇";
@@ -132,6 +133,7 @@ public interface CommonConstants {
     String WINE_MSG_CODE34 = "34";
     String WINE_MSG_CODE40 = "40";
     String WINE_MSG_CODE42 = "42";
+
 
     String CARD_CODE_0 = "031001";//9600波特率 03 10 01 12
     String CARD_CODE_1 = "032000";//未加校验字 寻卡 模式1 00
