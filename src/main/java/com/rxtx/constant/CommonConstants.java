@@ -139,7 +139,7 @@ public interface CommonConstants {
     String CARD_X20_FAILD = "DF"; //寻卡失败命令
     String FACE_DB = "C:/facedb";
     String FACE_IMAGE_SUBFIX = ".jpg";
-    float  FACE_COMPARE_SUCCESS = 0.7f;
+    float  FACE_COMPARE_SUCCESS = 0.8f;
     Integer FACE_DEF_NUM = 10; //默认采集照片数量
     //Integer FACE_IMG
     Integer FACE_REG_TIME_OUT = 6000; //人脸采集超时时间

@@ -1,8 +1,8 @@
 package com.rxtx.utils;
 
 import com.chs_vision_faces.sdk.*;
+import org.apache.commons.codec.binary.Base64;
 import org.opencv.core.Mat;
-import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -166,8 +166,7 @@ public class FaceUtils {
             e.printStackTrace();
         }
         byte[] bytes = baos.toByteArray();//转换成字节
-        BASE64Encoder encoder = new BASE64Encoder();
-        String jpg_base64 = encoder.encodeBuffer(bytes).trim();//转换成base64串
+        String jpg_base64 = Base64.encodeBase64String(bytes).trim();//转换成base64串
         jpg_base64 = jpg_base64.replaceAll("\n", "").replaceAll("\r", "");//删除 \r\n
         //System.out.println("值为：" + "data:image/jpg;base64," + jpg_base64);
         return "data:image/jpg;base64," + jpg_base64;
