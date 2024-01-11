@@ -74,11 +74,11 @@ async:
     pool-size:
       core: 100
       max: 100
-#logging:
+logging:
 #  level:
 #    root: ERROR
-#  file:
-#    path: ./log
+  file:
+    path: ./log
 
 excluded:
   pages: /zzj/index,/zzj/login,/zzj/logout,/zzj/index.html,/zzj/favicon.ico,/zzj/login.html,/zzj/duty.html,/zzj/duty_result.html,/zzj/three.html,/zzj/off_duty.html,/zzj/off_result.html,/zzj/off_order.html,/zzj/order_result.html,/zzj/user/examList
