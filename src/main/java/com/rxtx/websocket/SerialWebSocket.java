@@ -333,8 +333,10 @@ public class SerialWebSocket {
 //                sendMessage(null,sid,JSON.toJSONString(map4));
 //                break;
             case "9":
-                vc.release();
-                vc = null;
+                if(vc != null){
+                    vc.release();
+                    vc = null;
+                }
                 //关闭
                 break;
             default:
