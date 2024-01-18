@@ -10,10 +10,7 @@ import com.rxtx.dto.res.UserFaceFeatureResDTO;
 import com.rxtx.entity.SerialEntity;
 import com.rxtx.manage.AsyncManager;
 import com.rxtx.service.FaceService;
-import com.rxtx.utils.ApplicationContextRegister;
-import com.rxtx.utils.FaceUtils;
-import com.rxtx.utils.SerialUtil;
-import com.rxtx.utils.SpringUtils;
+import com.rxtx.utils.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.videoio.VideoCapture;
@@ -80,14 +77,26 @@ public class SerialWebSocket {
      */
     @OnOpen
     public void onOpen(@PathParam("sid") String sid,Session session){
-        if(rs232Config == null){
-            ApplicationContext act = ApplicationContextRegister.getApplicationContext();
-            rs232Config = act.getBean(Rs232Config.class);
-            faceService = act.getBean(FaceService.class);
+        try{
+            // 只允许一个sid连接存在 20240110
+            if(webSocketMap.get(sid) != null) {
+                SerialWebSocket socket = webSocketMap.remove(sid);
+                socket.session.close();
+                socket = null;
+            }
+
+            if(rs232Config == null){
+                ApplicationContext act = ApplicationContextRegister.getApplicationContext();
+                rs232Config = act.getBean(Rs232Config.class);
+                faceService = act.getBean(FaceService.class);
+            }
+            this.session = session;
+            this.sid = sid;
+            webSocketMap.put(sid,this);
+        }catch (Exception e){
+            log.error("Open {} exception:",sid,e);
         }
-        this.session = session;
-        this.sid = sid;
-        webSocketMap.put(sid,this);
+
     }
 
     /**
@@ -153,6 +162,36 @@ public class SerialWebSocket {
 
     }
 
+    private void closeWS(String sid){
+        try {
+            SerialWebSocket socket = webSocketMap.remove(sid);
+            if (socket != null){
+                log.info("Close {} msg:to close",sid);
+                switch (sid){
+                    case SID_WINE_TEST0:
+                    case SID_WINE_TEST1:
+                        closePort(CommonConstants.WINE_COM);
+                        break;
+                    case SID_FACE:
+                        if(vc != null){
+                            vc.release();
+                            vc = null;
+                        }
+                        break;
+                    case SID_CARD:
+                        closePort(CommonConstants.CARD_COM);
+                        break;
+                    default:
+                        break;
+                }
+                socket.session.close();
+                socket = null;
+            }
+        }catch (IOException e) {
+            log.error("Close {} exception:",sid,e);
+
+        }
+    }
     /**
      * 发送消息
      * @param message
@@ -183,7 +222,9 @@ public class SerialWebSocket {
                         default:
                             break;
                     }
-                    socket.session.getBasicRemote().sendText(socketMsg);
+                    if(socket != null && socket.session != null){
+                        socket.session.getBasicRemote().sendText(socketMsg);
+                    }
                 } catch (IOException e) {
                     //log.error("Send {} message {} exception:",sid,message,e);
                 }
@@ -213,6 +254,7 @@ public class SerialWebSocket {
                 break;
             case "9":
                 rs232Config.sendData(CommonConstants.WINE_COM,CommonConstants.FORMAT_HEX,CommonConstants.WINE_CODE_4);
+
                 break;
             default:
                 break;
@@ -222,10 +264,25 @@ public class SerialWebSocket {
     private void cardDevice(SocketEventReqDTO param){
         switch (param.getEvent()){
             case "1": //打开 COM5端口
-                String serialStr = "{\"portId\": \"COM5\",\"bitRate\": \"9600\",\"dataBit\": \"8\",\"stopBit\": \"1\",\"checkBit\": \"无\",\"format\": \"HEX\"}";
-                openPort(serialStr);
-                String hexCode0 = SerialUtil.cardCheckSum(CommonConstants.CARD_CODE_0);
-                rs232Config.sendData(CommonConstants.CARD_COM,CommonConstants.FORMAT_HEX,hexCode0);
+                if(null == rs232Config.serialPortMap.get(CommonConstants.CARD_COM)){
+                    String serialStr = "{\"portId\": \"COM5\",\"bitRate\": \"9600\",\"dataBit\": \"8\",\"stopBit\": \"1\",\"checkBit\": \"无\",\"format\": \"HEX\"}";
+                    openPort(serialStr);
+                    String hexCode0 = SerialUtil.cardCheckSum(CommonConstants.CARD_CODE_0);
+                    rs232Config.sendData(CommonConstants.CARD_COM,CommonConstants.FORMAT_HEX,hexCode0);
+                }else{
+                    int i = 0;
+                    boolean comOpen = true;
+                    while (comOpen){
+                        ThreadUtils.sleep(500);
+                        if(null == rs232Config.serialPortMap.get(CommonConstants.CARD_COM)){
+                            comOpen = false;
+                        }else if(null != rs232Config.serialPortMap.get(CommonConstants.CARD_COM) && i==10){
+                            sendMessage(null,sid,CommonConstants.CARD_COM_FAIL);
+                        }else if(null == rs232Config.serialPortMap.get(CommonConstants.CARD_COM)){
+                            i++;
+                        }
+                    }
+                }
 
                 break;
             case "2": //寻卡
@@ -233,7 +290,8 @@ public class SerialWebSocket {
                 rs232Config.sendData(CommonConstants.CARD_COM,CommonConstants.FORMAT_HEX,hexCode);
                 break;
             case "9":
-
+                sendMessage(null,sid,"WS_CLOSE_MSG");
+                closeWS(sid);
                 break;
             default:
                 break;
@@ -243,7 +301,7 @@ public class SerialWebSocket {
     private void faceDevice(SocketEventReqDTO param){
         switch (param.getEvent()){
             case "1"://连接并检测人脸返回
-                    vc = new VideoCapture(0);
+                    vc = new VideoCapture(1);
 
                     faceMsgEvent1(SID_FACE);
                 break;
@@ -275,8 +333,10 @@ public class SerialWebSocket {
 //                sendMessage(null,sid,JSON.toJSONString(map4));
 //                break;
             case "9":
-                vc.release();
-                vc = null;
+                if(vc != null){
+                    vc.release();
+                    vc = null;
+                }
                 //关闭
                 break;
             default:
@@ -379,10 +439,6 @@ public class SerialWebSocket {
                 //数据截取计算: 减去 长度字 命令字 占的2个字节 剩余的为数据字节 乘以2 (两位16进制数作为1字节) 加上长度字和命令字的4位
                 dataStr = message.substring(4,(length - 2) * 2 + 4);
                 log.info("dataStr:"+dataStr);
-                //0320005D164100082000
-                //0320007D14BF000820
-                //005D1641 0008 20
-                //ATQA+SAK
                 String atqaSakStr = dataStr.substring(dataStr.length()-6);
 
                 //checkSum校验字
@@ -391,7 +447,6 @@ public class SerialWebSocket {
                 //物理卡号为 02 + 数据字
 
                 res = "卡号:" +  CommonConstants.CARD_X20_HEAD+dataStr;
-                //log.info("res:"+res);
                 break;
             case CommonConstants.CARD_X20_FAILD ://寻卡 失败返回值
 
@@ -400,6 +455,7 @@ public class SerialWebSocket {
                 break;
         }
 
+        //String res = "卡号:" +  CommonConstants.CARD_X20_HEAD+"007D14BF000820";//test
         log.info("res:"+res);
         return res;
     }

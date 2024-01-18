@@ -116,7 +116,8 @@ public interface CommonConstants {
     String WINE_CODE_3 = "7E013000010031"; //请求吹气,等待测试
     String WINE_CODE_4 = "7E014000010041"; //停止酒测
 
-
+    String WS_CLOSE_MSG ="websocket已关闭";
+    String CARD_COM_FAIL ="COM5端口打开失败";
     String HEX_STRING = "0123456789ABCDEF";
     String NONE = "无";
     String ODD = "奇";
@@ -133,13 +134,14 @@ public interface CommonConstants {
     String WINE_MSG_CODE40 = "40";
     String WINE_MSG_CODE42 = "42";
 
+
     String CARD_CODE_0 = "031001";//9600波特率 03 10 01 12
     String CARD_CODE_1 = "032000";//未加校验字 寻卡 模式1 00
     String CARD_X20_HEAD = "20"; //寻卡命令
     String CARD_X20_FAILD = "DF"; //寻卡失败命令
     String FACE_DB = "C:/facedb";
     String FACE_IMAGE_SUBFIX = ".jpg";
-    float  FACE_COMPARE_SUCCESS = 0.7f;
+    float  FACE_COMPARE_SUCCESS = 0.8f;
     Integer FACE_DEF_NUM = 10; //默认采集照片数量
     //Integer FACE_IMG
     Integer FACE_REG_TIME_OUT = 6000; //人脸采集超时时间

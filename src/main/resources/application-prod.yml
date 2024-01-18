@@ -75,8 +75,8 @@ async:
       core: 100
       max: 100
 logging:
-  level:
-    root: ERROR
+#  level:
+#    root: ERROR
   file:
     path: ./log
 
